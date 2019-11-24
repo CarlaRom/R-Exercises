@@ -1,0 +1,385 @@
+---
+title: "Tema 6 Apuntes"
+author: "Carla Romero Sansano"
+date: "28 de octubre de 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Tablas de frecuencias unidimensionales
+Con r, la tabla de frecuencias absolutas de un vector que representa una variable cualitativa se calcula con la función **table()**.
+
+```{r}
+aleatorio = sample(1:5, size = 12, replace = TRUE)
+aleatorio
+
+```
+
+```{r}
+Respuestas=factor(sample(c("Si","No"), size = 12, replace = TRUE))
+Respuestas
+
+```
+```{r}
+table(aleatorio)
+table(Respuestas)
+
+```
+El resultado de una función **table()** es un objeto de datos de un tipo nuevo: una tabla de contingencia, una **table** en el argot de R.
+
+**Tabla de contingencia**: Tabla unidimensional formada por una fila con los niveles de la variable y una segunda fila con la frecuencia absoluta de cada uno de los niveles que ha aparecido en la muestra (debajo de cada nivel aparece su frecuencia absoluta en el vector).
+
+**names()**:Devuelve el nombre de los niveles presentes en la tabla de contingencia
+
+En la **table** de un vector solo aparecen los nombres de los niveles presentes en el vector. Si el tipo de datos cualitativos usado tenía más niveles y queremos que aparezcan explícitamente en la tabla (con frecuencia 0), hay que transformar el vector en un factor con los niveles deseados.
+```{r}
+z = factor(aleatorio, levels = 1:7) #Los niveles serán ahora 1,2,3,4,5,6,7
+z
+table(z)
+
+```
+Podemos pensar que una tabla unidimensional es como un vector de números donde cada entrada está identificada por un nombre: el de su columna. Para referirnos a una entrada de una tabla unidimensional, podemos usar tanto su posición como su nombre (entre comillas, aunque sea un número).
+```{r}
+table(aleatorio)[3] #La tercera columna de table(aleatorio)
+table(z)[3]
+table(aleatorio)["7"] #¿La columna de table(aleatorio) con nombre 7?
+table(z)["7"]
+table(aleatorio)["5"] #La columna de table(aleatorio) con nombre 5
+3*table(aleatorio)[2] #El triple de la segunda columna de table(aleatorio)
+```
+Las tablas de contingencia aceptan la mayoría de las funciones que ya hemos utilizado para vectores:
+```{r}
+sum(table(aleatorio)) #Suma de las entradas de table(aleatorio)
+sqrt(table(Respuestas)) #Raíces cuadradas de las entradas de table(Respuestas)
+
+
+```
+
+### Tablas de contingencia (práctica)
+
+```{r}
+datos = factor(c("H","M","M","M","H","H","M","M"))
+table(datos)
+table(datos)["M"]
+sum(table(datos))
+
+```
+
+### Tabla de frecuencias relativas
+La tabla de **frecuencias relativas** de un vector se puede calcular aplicando la función **prop.table()** a su **table()** (tabla de contingencia o de frecuencias absolutas). El resultado vuelve a ser una tabla de contingencia unidimensional.
+```{r}
+prop.table(table(aleatorio))
+prop.table(table(Respuestas))
+```
+<l class="important">**¡CUIDADO!**</l> La función `prop.table()` se tiene que aplicar al resultado de `table`, no al vector original. Si aplicamos `prop.table()` a un vector de palabras o a un factor, dará un error, pero si la aplicamos a un vector de números, nos dará una tabla.
+
+Esta tabla no es la tabla de frecuencias relativas de la variable cualitativa representada por el vector, sino la tabla de frecuencias relativas de una variable que tuviera como tabla de frecuencias absolutas este vector de números, entendiendo que cada entrada del vector representa la frecuencia absoluta de un nivel diferente.
+```{r}
+prop.table(aleatorio)
+```
+
+Otro ejemplo:
+```{r}
+X = c(1,1,1)
+prop.table(table(X))
+
+prop.table(X)
+```
+
+También se puede calcular la tabla de frecuencias relativas a mano, es decir, dividiendo el resultado de `table` por el número total de observaciones.
+
+```{r}
+table(aleatorio)/length(aleatorio)
+
+```
+
+## Frecuencias absolutas
+Dados un vector **x** y un número natural **n**, la instrucción:
+`names(which(table(x) == n))`
+nos da los niveles que tienen frecuencia absoluta **n** en **x**.
+```{r}
+table(aleatorio)
+names(which(table(aleatorio) == 3))
+names(which(table(aleatorio) == 5))
+```
+
+## Moda
+Tuneando la instrucción anterior tendríamos la siguiente:
+`names(which(table(x) == max(table(x))))`
+que nos da los niveles de frecuencia máxima en **x**: su **moda**.
+```{r}
+names(which(table(aleatorio) == max(table(aleatorio))))
+
+names(which(table(Respuestas) == max(table(Respuestas))))
+```
+
+# Ejercicio práctico
+Recuperad el ejemplo de los 6 hombres y las 14 mujeres anterior y, utilizando R, calculad su tabla de frecuencias absolutas, su tabla de frecuencias relativas y la moda.
+Pista: usad la función **rep()** para no tener que escribir los datos a mano.
+
+```{r}
+H <- rep("H", 6)
+Muj <- rep("M", 14)
+HM = c(H,Muj)
+HM
+HyM= factor(sample(HM, 20, replace = TRUE))
+#HyM = factor(sample(c(H,Muj), length(Muj),replace(TRUE)))
+HyM
+table(HyM) #TABLA FRECUENCIAS ABSOLUTAS
+prop.table(table(HyM)) #TABLA FRECUENCIAS RELATIVAS
+names(which(table(HyM) == max(table(HyM)))) #MODA
+
+```
+
+# Otro ejercicio hecho por el profesor
+```{r}
+datos = factor(c("H","M","M","M","H","H","M","M"))
+table(datos)
+table(datos)["M"]
+sum(table(datos))
+```
+#### Frecuencias relativas
+$$f_i = \frac{n_i}{n}$$
+```{r}
+prop.table(table(datos))
+100*prop.table(table(datos)) #Porcentaje
+table(datos)/length(datos) #Forma manual
+names(table(datos))
+names(which(table(datos)==3)) #Los que tienen una frecuencia absoluta igual a 3
+names(which(table(datos)==max(table(datos)))) #MODA
+#Moda creando una función:
+moda <- function(d){
+  names(which(table(d)==max(table(d))))
+}
+m_t = moda(datos)
+```
+
+La moda del data frame **datos** es: `r m_t`.
+
+
+# Tablas de frecuencias bidimensionales
+La función **table()** también permite construir tablas de frecuencias conjuntas de dos o más variables.
+Supongamos que el vector **Respuestas** anterior contiene las respuestas a una pregunta dadas por unos individuos cuyos sexos tenemos almacenados en un vector **Sexo**, en el mismo orden que sus respuestas. En este caso, podemos construir una tabla que nos diga cuántas personas de cada sexo han dado cada respuesta.
+```{r}
+Respuestas=factor(sample(c("Si","No"), size = 12, replace = TRUE))
+Respuestas
+Sexo=sample(c("H","M"), size = length(Respuestas), replace = T) #H = hombre, M = mujer (Muestra aleatoria)
+table(Respuestas,Sexo) #Respuesta en las filas y Sexo en las columnas
+
+```
+
+#### Mini ejercicio
+- Comprobad qué ocurre si cambiamos el orden de las columnas en la función table()
+```{r}
+table(Sexo, Respuestas)
+```
+-Usad la función t() para transponer ambas tablas y comprobad el resultado
+```{r}
+t(table(Respuestas, Sexo)) #Nos da la table(Sexo, Respuestas)
+t(table(Sexo, Respuestas)) #Nos da la table(Respuestas, Sexo)
+```
+Para referirnos a una *entrada* de una tabla bidimensional podemos usar el sufijo **[ , ]** como si estuviéramos en una matriz o un data frame. Dentro de los corchetes, tanto podemos usar los índices como los nombres(entre comillas) de los niveles.
+```{r}
+table(Respuestas,Sexo)[1,2] #Fila: 1, columna: 2
+table(Respuestas,Sexo)["No", "M"]
+```
+
+Como en el caso unidimensional, la función **prop.table()** sirve para calcular tablas bidimensionales de frecuencias relativas conjuntas de pares de variables. Pero en el caso bidimensional tenemos dos tipos de frecuencias relativas:
+
+- **Frecuencias relativas globales**: para cada par de niveles, uno de cara variable, la fracción de individuos que pertenecen a ambos niveles respecto del total de la muestra. (*Ejemplo*: proporción de mujeres que han dicho que sí respecto al total de individuos (muestra) (hombre y mujer)) 
+- **Frecuencias relativas marginales**: dentro de cada nivel de una variable y para cada nivel de la otra, la fracción de individuos que pertenecen al segundo nivel respecto del total de la subpoblación definida por el primer nivel. (*Ejemplo*:dos familias de frecuencias marginales, proporción de mujeres que han dicho que sí respecto al total de mujeres o proporción de mujeres que han dicho que sí respecto al total de personas que han dicho que sí )
+
+Dadas dos variables, se pueden calcular dos familias de frecuencias relativas marginales, según cuál sea la variable que defina las subpoblaciones en las que calculemos las frecuencias relativas de los niveles de la otra variable, no es lo mismo la fracción de mujeres que han contestado que sí respecto del total de mujeres, que la fracción de mujeres que han contestado que sí respecto del total de personas que han dado esta misma respuesta. 
+
+
+
+La tabla de frecuencias relativas globales se calcula aplicando SIN MÁS la función **prop.table()** a la **table**.
+```{r}
+prop.table(table(Sexo,Respuestas)) #GLOBAL
+```
+-Ejemplo, un 33% del total de la muestra son Hombres que han dicho que No. 
+
+De este modo, la tabla **prop.table(table(Sexo, Respuestas))** nos da la fracción total que representa cada pareja (sexo,respuesta).
+
+Para obtener las marginales, debemos usar el parámetro **margin** al aplicar la función **prop.table()** a la **table**. Con **margin=1** obtenemos las frecuencias relativas de las filas y con **margin=2**, de las columnas. 
+```{r}
+prop.table(table(Sexo,Respuestas), margin=1) #Por Sexo
+
+prop.table(table(Sexo,Respuestas), margin=2) #Por Respuesta
+
+```
+**Primer caso (por sexo)**:
+-El 66% de los hombres respondió que No y el 33% de los hombres respondió que Si.
+-El 16% de las mujeres respondió que No y el 83% de las mujeres respondió que Si.
+
+**Segundo caso (por respuesta)**:
+-De los que han respondido que No, el 80% eran hombres y el 20% mujeres
+-De los que han respondido que Si, el 28% eran hombres y el 71% eran mujeres
+
+
+### Función CrossTable()
+La función **CrossTable()** del paquete **gmodels** permite producir (especificando el parámetro **prop.chisq=FALSE**) un resumen de la tabla de frecuencias absolutas y las tres tablas de frecuencias relativas de dos variables en un formato adecuado para su visualización.
+
+La leyenda *Cell Contents* explica los contenidos de cada celda de la tabla: la frecuencia absoluta, la frecuencia relativa por filas, la frecuencia relativa por columnas y la frecuencia relativa global. Esta función dispone de muchos parámetros que permiten modificar el contenido de las celdas, y que podéis consultar en **help(CrossTable)**.
+
+
+
+#### Paquete `gmodels`
+
+```{r}
+#install.packages("gmodels")
+library(gmodels)
+sex = factor(c("H","M","M","M","H","H","M","M"))
+ans = factor(c("S","N","S","S","S","N","N","S"))
+
+CrossTable(sex, ans, prop.chisq = FALSE)
+```
+
+#### Sumas por filas y columnas
+
+```{r}
+tt <- table(sex,ans)
+tt #Frecuencias absolutas
+prop.table(tt) #Frecuencia relativa Global
+prop.table(tt, margin = 1) #Frecuencia relativa por sexo
+prop.table(tt, margin = 2) #Frecuencia relativa por respuesta
+
+colSums(tt) #Suma por columnas de las frecuencias abs.
+rowSums(tt) #Suma por filas de las frecuencias abs.
+colSums(prop.table(tt)) #Suma por col de las frec. relativas
+rowSums(prop.table(tt)) #Suma por filas de las frec. rel.
+
+apply(tt, FUN = sum, MARGIN = 1) #Suma por fila
+apply(tt, FUN = sqrt, MARGIN = c(1,2)) #Raíz cuadrada por cada elemento (entrada) de la tabla
+
+```
+
+
+Una **tabla de contingencia bidimensional** es, básicamente, una matriz con algunos atributos extra. En particular, podemos usar sobre estas tablas a mayoría de las funciones para matrices que tengan sentido para tablas:
+
+- **rowSums()** y **colSums()** se pueden aplicar a una tabla y suman sus filas y sus columnas, respectivamente.
+
+- También podemos usar sobre una tabla bidimensional (o, en general, multidimensional)la función **apply()** con la misma sintaxis que para matrices.
+
+```{r}
+table(Sexo, Respuestas)
+#frecuencias absolutas:
+colSums(table(Sexo, Respuestas))
+rowSums(table(Sexo, Respuestas))
+
+#frecuencias relativas:
+colSums(prop.table(table(Sexo, Respuestas))) 
+rowSums(prop.table(table(Sexo, Respuestas)))
+
+```
+
+# MULTIVARIANTE/ESTADÍSTICA MULTIDIMENSIONAL
+
+En general, se pueden calcular tablas de frecuencias de cualquier número de variables (no solo una o dos). Ahora hay más variables a la hora de contar y calcular las frecuencias.
+
+## Ejemplo con tres dimensiones+
+
+```{r}
+ans2 = sample(c("Si", "No"), size = 100, replace = TRUE)
+sex2 = sample(c("H", "M"), size = 100, replace = TRUE)
+place = sample(c("San Francisco", "Barcelona", "Valencia", "Cobija", "Asturias"), size = 100, replace = TRUE)
+table(sex2, ans2, place)
+
+```
+Se obtiene una lista de tablas bidimensionales separando la población según el nivel de la tercera variable (lugar de procedencia).
+Si no nos gusta esta forma de visualizar los datos tenemos la función **ftable()** que nos crea una tabla en un formato plano (un poco más complicado de visualizar), juntando la información sin separarla en subtablas bidimensionales.En esta función se puede especificar qué variable queremos que aparezca como fila y qué variable queremos que aparezca como columna.
+```{r}
+ftable(sex2,ans2,place)
+ftable(sex2,ans2,place, col.vars = c("sex2", "ans2")) #tabla más fácil de leer
+```
+### Filtrar las tablas
+
+```{r}
+table(sex2,ans2,place)["M", "Si", "San Francisco"]
+table(sex2,ans2,place)[ , "Si", "Valencia"] #quiero los dos géneros que han dicho que si en Valencia
+table(sex2,ans2,place)[ , "No", ] #quiero toda la gente que ha dicho que no
+table(sex2,ans2,place)["M", , "Cobija"] #quiero todas las mujeres de Cobija independientemente de su respuesta si/no
+
+
+
+```
+
+### Frecuencias relativas
+
+Si la dimensión crece, la visualización de los datos se complica.
+
+```{r}
+prop.table(table(sex2,ans2,place)) #Frecuencias relativas globales
+#Ejemplo lectura tabla: los hombres que han dicho que Si en San Francisco representan el 8% del total de individuos que han formado parte de la muestra. Las mujeres que han dicho que No en Valencia representan el 4% de la muestra.
+
+prop.table(table(sex2,ans2,place), margin = 3) #Frecuencia relativa marginal por lugar
+#Ejemplo lectura tabla: de todas las personas que contestaron en San Frascisco, el 22% eran mujeres que dijeron que Si. El 31% eran hombres que dijeron que No.
+
+prop.table(table(sex2,ans2,place), margin = c(1,3)) #Frecuencia relativa marginal por sexo y país
+#Ejemplo lectura tabla: el 25% de las mujeres de San Francisco han dicho que No. El 75% restante de las mujeres de San Francisco han dicho que Si (todo ello por lugar)
+
+ftable(prop.table(table(sex2,ans2,place)))
+```
+
+# Ejemplo multivariante HairEyeColor (people)
+### Ejemplo de color de ojos y de pelo
+
+R trae definido de serie **HairEyeColor** como una tabla de frecuencias de tres variables cualitativas.No todos los objetos de datos vienen en estructura de dataframe.
+
+La información viene agregada, como si entráramos en el Instituto Nacional de Estadística y obtenemos los datos agregados por grupos, no los row data (en crudo) (individuo a individuo). 
+
+```{r}
+HairEyeColor
+
+sum(HairEyeColor) #Da el número de individuos totales (592)
+sum(HairEyeColor) -> total
+
+```
+
+El total de individuos de la tabla de datos es `r total`.
+
+Ya que viene hecha la tabla de frecuencias absolutas, podemos hacer la tabla de frecuencias relativas marginales.
+
+```{r}
+prop.table(HairEyeColor, margin = 3) #Frecuencia relativa marginal por género
+
+```
+Lectura de la tabla: el 11.46% de los hombres respecto al total de hombres tiene pelo negro y ojos marrones. Solo el 1.07% de los hombres tiene el pelo negro y los ojos verdes.
+Solo el 0.6% de las mujeres tiene el pelo negro y los ojos verdes. 
+
+```{r}
+prop.table(HairEyeColor, margin = c(1,2)) #Proporciones relativas marginales del color de pelo y ojos repartidas por sexo
+
+```
+Lectura de la tabla: del total de personas que tienen el pelo negro y los ojos marrones, el 47% son hombres y el 52% son mujeres.De las personas con pelo negro y ojos verdes, el 60% son hombres y el 40% son mujeres. 
+
+Por ejemplo, si queremos cambiar el orden de variables y poner **Género** contra **Pelo** filtrado por **color de ojos** se puede hacer con la función *aperm*:
+```{r}
+#Permite cambiar el orden de las columnas
+aperm(HairEyeColor, perm = c("Sex", "Hair", "Eye"))
+
+```
+**kable** librería que forma parte de Knit, sirve para mostrar la información en forma de dataframe de cuatro columnas (pelo,ojo,sexo y frecuencias).
+
+```{r}
+#install.packages("kableExtra") #Primero instalar el paquete
+library(kableExtra) #importar la librería
+kable(HairEyeColor)
+
+```
+
+Hay otra librería (más pensada para pdf, en html no se ve bien) que se puede utilizar para formatear tablas pero tienen que tener dos dimensiones:
+
+```{r, results='asis'}
+#results='asis' -> muestra los resultados tal cual sin procesar 
+#install.packages("xtable")
+library(xtable)
+#No funciona para HairEyeColor (porque tiene 3 dimensiones)
+xtable(table(sex2,ans2))
+
+```
+
+
+
+

@@ -1,0 +1,127 @@
+---
+title: "TAREA 6 REPRESENTACIÓN GRÁFICA"
+author: "Carla Romero Sansano"
+date: "3 de septiembre de 2019"
+output: html_document
+---
+# Ejercicio propuesto en el tema 4
+## Añadiendo etiquetas
+-Destacar con una flecha el estudiante que saca más nota.
+-Estrella, cuadrado o círculo alrededor de los que han suspendido
+-Podría añadir una linea recta que separe los excelentes y otra que separe los suspendidos
+
+```{r, fig.width = 9, fig.height = 3.75,fig.align = "center"}
+alumnos = c(1:10)
+notas = c(2,5,7,9,8,3,5,6,10,7)
+plot(alumnos,notas, main = "Grafico con texto", xaxp = c(1,10,9), yaxp = c(1,10,9))
+text(alumnos,notas, labels = c("S","A","N","E","N","S","A","A","E","N"), 
+     pos = c(rep(3,times = 8),1,3))
+arrows(8.5,9,9,9.8, col = "cyan2", length = 0.25, angle = 10, code = 2, lwd = 2)
+symbols(6,3, stars = cbind(1,.5,1,.5,1,.5,1,.5,1,.5,1,.5,1,.5,1,.5), add = TRUE, lwd =1, inches = 0.4)
+symbols(1,2, squares = 2, add = TRUE, lwd =1, inches = 0.45)
+abline (h = 8.7, lty = 3, col = "seagreen4")
+abline (h = 4, lty = 3, col = "red4")
+```
+
+# Ejercicios de la tarea 6
+## Preguntas de esta tarea
+
+1- Con una sola instrucción, dibujad el gráfico de la función y=x^2−3x+30 entre -15 y 15. De título, poned "Una parábola". De etiquetas, en el eje 0X poned, en formato matemático, "x"; y en el eje 0Y, introducid $y=x^2−3x+30$, también en formato matemático. Tenéis que utilizar la función curve() 
+```{r, fig.align = "center"}
+x = c(-15:15)
+y = x^2-(3*x)+30
+plot(x,y, main = "Una parábola", xlab = expression(x), ylab = expression(y==x^2-3*x+30))
+curve(x^2-(3*x)+30, add = TRUE,lty = "solid", col = "red")
+
+```
+
+EL CHUNK SIGUIENTE CONTIENE LA RESPUESTA QUE CREO QUE ES LA CORRECTA:
+```{r, fig.align= "center"}
+curve(x^2-(3*x)+30, from = -15,to = 15, xlab = expression(x), ylab = expression(y == x^2-3*x+30), main = "Una parábola", lty = "solid", col = "black")
+
+```
+
+####Respuesta Juan Gabriel
+```{r, fig.align= "center"}
+curve(x^2-3*x+30,-15,15,main="Una parabola", xlab = expression(x),ylab = expression(y=x^2-3*x+30))
+```
+
+
+2- Considerando lo que habéis obtenido en el ejercicio anterior y siendo y = f(x) = x^2-3x+30 e I= [-15:15], si en vez de utilizar la función curve(), utilizamos la función plot(), ¿es correcta la sentencia plot(f(I)) para representar la curva f en el intervalo I? En otras palabras, ¿dan ambas sentencias la misma gráfica? Obviamente, en la sentencia plot(f(I)) se han omitido el resto de parámetros requeridos en el ejercicio anterior porque no influyen para nada en la curva. Tanto si la respuesta es afirmativa como negativa, cread la función f en R y argumentad vuestra respuesta, considerando todos los parámetros requeridos (título y etiquetas de ambos ejes). 
+```{r, fig.align= "center"}
+par(mfrow = c(1,2))
+f <- function(x){x^2-(3*x)+30}
+I = c(-15:15)
+plot(I, f(I), main = "Una parábola", xlab = expression(x), ylab = expression(y==x^2-3*x+30), type = "l")
+curve(x^2-(3*x)+30, from = -15,to = 15, xlab = expression(x), ylab = expression(y == x^2-3*x+30), main = "Una parábola", lty = "solid", col = "black")
+
+```
+Respuesta: Ambas sentencias dan la misma gráfica. En el primer caso con curve(), se puede representar la función sin definirla previamente y añadir los límites (de -15 a 15) que van a situarse en el eje x, mientras que con plot(), los ejes **x** e **y** los he definido previamente como el rango -15 a 15 y la función x^2-(3*x)+30 respectivamente. 
+
+####Respuesta Juan Gabriel
+```{r, fig.align= "center"}
+f = function(x){x^2-3*x+30}
+
+I = c(-15:15)
+
+#No, la sentencia es incorrecta. La sentencia correcta sería
+
+plot(I, f(I), type = "l", main = "Una parabola",xlab = expression(x),ylab = expression(y=x^2-3*x+30))
+```
+
+
+3- Dibuja un gráfico semilogarítmico de la función $y = 5\cdot 2^x$ entre -10 y 25. Utilizad la función curve(). Mostrad solo la etiqueta del eje 0Y, que ponga "y = 5\cdot 2^x" en formato matemático. 
+**IMPORTANTE!SINTAXIS MATEMÁTICA PARA LAS ETIQUETAS, LEYENDAS, TEXTO, ETC..** Poner: ?plotmath en la consola
+```{r, fig.align= "center"}
+curve(5*2^x, from = -10, to = 25, xaxt = NULL, xlab = "", ylab = expression(y == 5%.%2^x))
+
+
+```
+
+####Respuesta Juan Gabriel
+```{r, fig.align= "center"}
+curve(5*2^x,-10,25,log="y", ylab = expression(y = 5*2^x), xlab = "")
+```
+
+
+4- Dibuja el gráfico de la función y_1 = 3x utilizando la función curve(). Añade la curva y_2=-3x, entre -10 y 20. El gráfico no debe mostrar ninguna etiqueta. La primera curva debe ser de color azul y la segunda, de color verde. Ponedle de título "2 rectas" y de subtítulo "Dos rectas con pendiente opuesta". Añadid al gráfico un recuadro (con la esquina superior izquierda en el punto (13,10)) que indique que la función 3x es la azul y la -3x verde. 
+```{r, fig.align= "center"}
+curve(3*x, xaxt = NULL, yaxt = NULL, xlab = "", ylab = "", col = "blue", main = "2 rectas", sub = "Dos rectas con pendiente opuesta", xlim = c(-10,20), ylim = c(-60,60))
+curve(-3*x, from = -10, to = 20, add = TRUE, col = "green" )
+legend(13,10, col = c("blue","green"), legend = c("y_1 = 3x", "y_2 = -3x"), lwd = 3, bty = "l")
+
+
+```
+
+####Respuesta Juan Gabriel
+```{r, fig.align= "center"}
+curve(3*x,-10,20, xlab = "", ylab="",col="blue", main = "2 rectas", sub = "Dos rectas con pendiente opuesto");
+
+curve(-3*x,col="green",add=TRUE);
+
+legend(13,10,legend=c("3x","-3x"),lty=c(1,1),col=c("blue","green"))
+```
+
+
+5- Dad la instrucción que añada a un gráfico anterior la recta horizontal y = 0 de color rojo con un grosor de 5 puntos.
+```{r}
+#abline(h=0, col = "red", lwd = 5)
+
+```
+
+####Respuesta Juan Gabriel
+```{r, fig.align= "center"}
+abline(h=0,col="red",lwd = 5)
+```
+
+
+6- Dad la instrucción que añada a un gráfico anterior la recta y = 2x+7 de color azul con un grosor de 2 puntos. 
+```{r}
+#abline(2,7, col = "blue", lwd = 2)
+```
+
+####Respuesta Juan Gabriel
+```{r, fig.align= "center"}
+abline(7,2,col="blue",lwd = 2)
+```
+

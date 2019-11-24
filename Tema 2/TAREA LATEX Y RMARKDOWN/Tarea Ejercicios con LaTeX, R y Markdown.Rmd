@@ -1,0 +1,95 @@
+---
+title: "Tarea Ejercicios con LaTeX, R y Markdown"
+author: "Carla Romero Sansano"
+date: "24 de agosto de 2019"
+output:
+  html_document: default
+  pdf_document: default
+---
+# Introducción
+En primer lugar, debéis reproducir este documento tal cual está. Necesitaréis instalar MiKTeX y Texmaker. 
+A continuación de cada pregunta, tenéis que redactar vuestras respuestas de manera correcta y argumentada, indicando qué hacéis, por qué, etc. Si se os pide utilizar instrucciones de R, tendréis que mostrarlas todas en chunks. 
+El objetivo de esta tarea es que os familiaricéis con los documentos Markdown, las fórmulas en $\LaTeX$ y los chunks de R. Y, de lo más importante, que os acostumbréis a explicar lo que hacéis en cada momento. 
+
+# Preguntas
+## Pregunta 1
+Realizad los siguientes productos de matrices siguiente en R:
+$$A \cdot B$$ $$B \cdot A$$ $$\left(A \cdot B \right)^t$$ $$B^t \cdot A$$ $$\left (A \cdot B \right)^{-1}$$ $$A^{-1} \cdot B^{t}$$ 
+donde $$A=\begin{pmatrix} 1 & 2 & 3 & 4 \\4 & 3 & 2 & 1\\0 & 1 & 0 & 2\\3 & 0 & 4 & 0 \end{pmatrix}\quad B=\begin{pmatrix} 4 & 3 & 2 & 1\\0 & 3 & 0 & 4\\1 & 2 & 3 & 4\\0 & 1 & 0 & 2 \end{pmatrix}$$
+
+Finalmente, escribe haciendo uso de $\LaTeX\ $ el resultado de los dos primeros productos de forma adecuada.
+
+Respuesta:
+```{r primer chunk}
+#Primero creo las dos matrices con las que vamos a trabajar
+A = rbind(c(1,2,3,4), c(4,3,2,1), c(0,1,0,2), c(3,0,4,0))
+A
+B = rbind(c(4,3,2,1), c(0,3,0,4), c(1,2,3,4), c(0,1,0,2))
+B
+#Una vez creadas las dos matrices A y B, llevo a cabo los productos que nos indica el ejercicio
+A%*%B #Producto matricial
+B%*%A #Producto matricial
+t(A%*%B) #Transpuesta del producto A·B
+t(B)%*%A #Transpuesta de B multiplicada por A
+solve(A%*%B) #Matriz inversa del producto A·B
+solve(A)%*%t(B) #Inversa de A por la transpuesta de B
+
+```
+Resultado de los dos primeros productos en $\LaTeX$:
+$$A \cdot B = \begin{pmatrix} 7 & 19 & 11 & 29\\18 & 26 & 14 & 26\\0 & 5 & 0 & 8\\16 & 17 & 18 & 19 \end{pmatrix}$$ 
+$$B \cdot A = \begin{pmatrix}19 & 19 & 22 & 23\\24 & 9 & 22 & 3\\21 & 11 & 23 & 12\\10 & 3 & 10 & 1 \end{pmatrix}$$
+
+## Pregunta 2
+Considerad en un vector los números de vuestro DNI y llamadlo `dni`. Por ejemplo, si vuestro DNI es 54201567K, vuestro vector será $$dni = \left(5,4,2,0,1,5,6,7 \right)$$ 
+Definid el vector en R. Calculad con R el vector `dni` al cuadrado, la raíz cuadrado del vector `dni` y, por último, la suma de todas las cifras del vector `dni`. 
+Finalmente, escribid todos estos vectores también en $\LaTeX$
+
+```{r segundo chunk}
+dni = c(7,4,3,9,3,6,2,0) #Primero defino el vector
+dni^2 #Calculo el cuadrado del vector elevándolo a 2
+dni*dni # O multiplicándolo por sí mismo
+round(sqrt(dni),2) #Raíz cuadrada del vector redondeada a 2 cifras decimales
+cumsum(dni)
+max(cumsum(dni)) #Suma total de todas las cifras del vector. Utilizo la función max(), ya que la función cumsum devuelve las sumas acumuladas de los elementos del vector y el último elemento (el máximo) es la suma total. 
+
+```
+
+Vector original:
+$$dni = \left(7,4,3,9,3,6,2,0 \right)$$
+Vector al cuadrado:
+$$dni^{2}=\left(49,16,9,81,9,36,4,0 \right)$$
+Raíz cuadrada del vector:
+$$\sqrt{dni}=\left(2.65, 2, 1.73, 3, 1.73, 2.45, 1.41, 0 \right)$$
+Suma de todas las cifras del vector:
+$$\sum{dni}=34$$
+Sumas acumuladas del vector:
+$$\sum_{i=0}^{n}dni = \left(7,11,14,23,26,32,34,34 \right)$$
+
+## Pregunta 3
+Considerad el vector de las letras de vuestro nombre y apellido. Llamadlo `name`. Por ejemplo, en mi caso sería $$nombre=\left(M,A,R,I,A,S,A,N,T,O,S \right)$$
+Definid dicho vector en R. Calculad el subvector que solo contenga vuestro nombre. Calculad también el subvector que contenga solo vuestro apellido. Ordenadlo alfabéticamente. Cread una matriz con este vector.
+Redactad todos vuestros resultados y utilizad $\LaTeX$ cuando toque. 
+```{r tercer chunk}
+name = c("C","A","R","L","A","R","O","M","E","R","O") #Defino el vector con mi nombre y apellido
+name[1:5] #Subvector solo con mi nombre
+name[6:11] #Subvector solo con mi apellido
+sort(name) #Vector ordenado alfabéticamente
+nameMatrix = matrix(name, nrow = 2, byrow = T) #Como el total de elementos no es múltiplo del número de filas, defino una matriz con una "C" repetida al final
+nameMatrix
+nameMatrix2 = matrix(name,ncol = 2, nrow = 5, byrow = F) #Aquí defino otra matriz que según el número de columnas que indico. Como la longitud del vector no es múltiplo del número de filas, en esta ocasión se elimina la última letra de mi apellido.
+nameMatrix2
+
+```
+Las respuestas en $\LaTeX$ quedarían de la siguiente forma:
+El vector con mi nombre y primer apellido $$name=\left(C,A,R,L,A,R,O,M,E,R,O \right)$$
+El subvector con mi nombre $$name=\left(C,A,R,L,A)\right)$$
+El subvector con mi apellido $$name=\left(R,O,M,E,R,O\right)$$
+Vector ordenado alfabéticamente $$name=\left(A,A,C,E,L,M,O,O,R,R,R\right)$$
+Matriz 1 con mi nombre y apellido
+$$nameMatrix =\begin{pmatrix}"C" & "A" & "R" & "L" & "A" & "R"\\"O" & "M" & "E" & "R" & "O" & "C"\end{pmatrix}$$
+Matriz 2 con mi nombre y apellido
+$$nameMatrix2=\begin{pmatrix}"C" & "R"\\"A" & "O"\\"R" & "M"\\"L" & "E"\\"A" & "R"\end{pmatrix}$$
+
+
+
+

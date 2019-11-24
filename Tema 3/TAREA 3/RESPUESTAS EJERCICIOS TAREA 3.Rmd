@@ -1,0 +1,128 @@
+---
+title: "RESPUESTAS EJERCICIOS TAREA 3"
+author: "Carla Romero Sansano"
+date: "22 de agosto de 2019"
+output: html_document
+---
+1. Cread un vector llamado "Harry" formado por la sucesión de números consecutivos entre el -10 y 27. Pedidle a R que os devuelva el elemento de índice 7. Escribid el resultado.
+```{r}
+Harry = c(-10:27)
+Harry
+Harry[7]
+```
+
+
+2. Dad el máximo de la sucesión (100*2^n -7*3^n) con n=0,...,200
+```{r}
+A = c(0:200)
+B = c(100*2^(A)-7*3^(A)) #Está bien
+B
+max(B)
+pmax(B)
+?max
+
+#FORMA DEL PROFESOR
+n=0:200
+
+max(100*2^n-7*3^n)
+
+1499
+
+```
+
+
+3. Cread la sucesión de números consecutivos entre 0 y 40. A continuación, cread el vector (3*5^n - 1) con n=0,...,40. Ponedle como nombre x. Ahora, dad el subvector de los elementos que son estrictamente mayores que 3.5
+```{r}
+Sucesion = c(0:40)
+Sucesion
+x = c(3*5^(Sucesion)-1)
+x
+x[x>3.5]
+
+#FORMA PROFESOR
+n=0:40
+
+x=3*5^n-1
+
+which(x>3.5)
+
+```
+
+
+4. Cread una función que os devuelva la parte real, la imaginaria, el módulo, el argumento y el conjugado de un número, mostrando solo 2 cifras signifcativas
+RECOMENDACIÓN: En algún momento os hará falta utilizar vectores
+```{r}
+c = c(2-3i, 1+2i, 4-2i)
+Re(c)
+Im(c)
+Mod(c)
+Arg(c)
+Conj(c)
+?complex
+Funcion = function(a){list(nombre = "Complejos", Real = Re(a), Imaginaria = Im(a), Modulo = round(Mod(a), digits = 2), Argumento = round(Arg(a), digits = 2), Conjugado= Conj(a))}
+Funcion(2+4i)
+#FORMA PROFESOR
+info = function(x){print(c(Re(x),Im(x),Mod(x),Arg(x),Conj(x)),2)}
+
+```
+
+
+5. Cread una función que resuelva ecuaciones de segundo grado (de la forma Ax^2+Bx+C=0). No importa, por ahora, que tengáis en cuenta las que no tienen solución
+```{r}
+SegundoGrado = function(a,b,c){
+  x1<- (-b+sqrt(b^2-(4*a*c)))/(2*a) 
+  x2<- (-b-sqrt(b^2-(4*a*c)))/(2*a)
+  solution<- c(x1,x2)
+  print(solution)
+  }
+SegundoGrado(4,20,24)
+
+#FORMA PROFESOR
+solu2 = function(A,B,C){c((-B+sqrt(B^2-4*A*C)/(2*A)),(-B-sqrt(B^2-4*A*C)/(2*A)))}
+
+
+```
+
+
+RECOMENDACIÓN: En algún momento os hará falta utilizar vectores
+
+6. Tomando el vector vec = c(0,9,98,2,6,7,5,19,88,20,16,0), dad 3 opciones diferentes para calcular el subvector c(9,19,20,16)
+
+Tomando el vector vec definido en el apartado anterior, buscad
+
+    - qué entradas son pares
+
+    - qué entradas no son pares y mayores que 20
+
+    - dónde toma vec su valor máximo
+
+    - dónde toma vec sus valores mínimos
+
+```{r}
+vec = c(0,9,98,2,6,7,5,19,88,20,16,0)
+vec[vec>8 & vec<21]
+vec[c(2,8,10,11)]
+vec[seq(2, length(vec), by = 2) & vec>=9 & vec<=20]
+#FORMA PROFESOR
+vec[c(2,8,10,11)]
+
+vec[vec == 9 | vec == 19 | vec == 20 | vec == 16]
+
+vec[vec >= 9 & vec <= 20]
+
+#-----------------------------------------------------------------------------------------
+vec[seq(2, length(vec), by = 2)] #Entradas pares
+vec[seq(1, length(vec), by = 2) & vec>20] #Entradas impares y mayores que 20
+which.max(vec) #Posición del máximo de vec
+which(vec==min(vec)) #Posiciones de todos los mínimos de vec
+#FORMA PROFESOR
+ which(vec%%2==0) #Pares (SE REFIERE A LOS NÚMEROS DENTRO DEL VECTOR QUE SON PARES, NO A LOS QUE ESTÁN EN POSICIONES PARES COMO YO HE PUESTO)
+
+ which(vec%%2!=0 & vec>20) #No pares y mayores que 20
+
+ which.max(vec) #Máximo
+
+ which(vec==min(vec)) #Mínimos
+  
+```
+

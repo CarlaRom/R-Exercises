@@ -1,0 +1,77 @@
+---
+title: "Tema 5-Funciones en data frames"
+author: "Carla Romero Sansano"
+date: "30 de septiembre de 2019"
+output: html_document
+---
+
+- `sapply(df, función)`: para aplicar una función a todas las columnas de un data frame en un solo paso
+    - `na.rm=TRUE`: para evitar que el valor que devuelva la función para las columnas que contengan algún NA sea NA
+
+- `aggregate(variables~factors,data=df,FUN=función)`: para aplicar una función a variables de un data frame clasificadas por los niveles de un, o más de un, factor
+    - Si queremos aplicar la función a más de una variable, tenemos que agruparlas con un `cbind`
+    - Si queremos separar las variables mediante más de un factor, tenemos que agruparlos con signos $+$
+    
+# Función `sapply`
+
+```{r}
+str(iris)
+sapply(subset(iris, select = 1:4), mean)
+sapply(iris[, 1:4], sum)
+f = function(x){sqrt(sum(x^2))} #Distancia euclídea
+sapply(iris[, 1:4], f)
+```
+
+```{r}
+#Para evitar que nos aparezcan los NA
+df1 = data.frame(C1 = c(1,2,NA,4), C2 = c(5,NA,2,3))
+sapply(df1, mean)
+sapply(df1, mean, na.rm = TRUE)
+
+```
+# Función `aggregate`
+
+```{r}
+#Hacer el agregado en función de FACTORES
+#Para calcular la media de la longitud de sépalos por cada tipo de flor (Species es un factor) con la función "aggregate"
+aggregate(Sepal.Length ~ Species, data = iris, FUN = mean, na.rm = TRUE)
+aggregate(cbind(Sepal.Length, Petal.Length)~Species, data = iris, FUN = mean, na.rm=TRUE)
+
+
+```
+### Ejemplo de cómo convertir una columna (variable) a factor
+
+```{r}
+head(mtcars)
+str(mtcars)
+#Transformando las variables cilindrada, marchas y el tipo de carburador a factores
+mtcars$cyl = as.factor(mtcars$cyl)
+mtcars$gear = as.factor(mtcars$gear)
+mtcars$carb = as.factor(mtcars$carb)
+str(mtcars)
+#Agregamos el consumo (mpg: millas por galeon/galón).
+#Vamos a pedir el consumo medio según la cilindrada,las marchas y el carburador
+#La variable numérica va antes de la tilde y el factor o factores después de la tilde
+aggregate(mpg~cyl+gear+carb, data = mtcars, FUN = mean, na.rm = TRUE)
+
+```
+
+## Variables globales
+
+- `attach(df)`: para hacer que R entienda sus variables como globales y que las podamos usar por su nombre, sin necesidad de añadir delante el nombre del data frame y el símbolo $
+    - Si ya hubiera existido una variable definida con el mismo nombre que una variable del data frame al que aplicamos `attach`, hubiéramos obtenido un mensaje de error al ejecutar esta función y no se hubiera reescrito la variable global original
+- `detach(d.f)`: para devolver la situación original, eliminando del entorno global las variables del data frame
+
+```{r}
+mpg
+mtcars$mpg
+attach(mtcars)
+mpg
+detach(mtcars)
+```
+
+
+
+
+
+

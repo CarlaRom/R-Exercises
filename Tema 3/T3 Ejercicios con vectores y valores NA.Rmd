@@ -1,0 +1,80 @@
+---
+title: "Vectores y valores NA T3"
+author: "Carla Romero Sansano"
+date: "12 de agosto de 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicios por consola con vectores y valores NA
+
+```{r}
+#¿Es cierta la condición numérica?. Ej:
+2^pi > pi^2
+2^pi
+pi^2
+12345678%%9==0 #¿Es múltiplo de 9? Si, el resto = 0
+length(1:100)>4
+length(1:100)>400
+x = 1:10
+x
+x[3]= 32 #Resultado parecido al que se puede hacer con la función fix(x)
+x[11] #No tiene elemento conocido/disponible en la posición 11
+x[11]=15 #Añade el elemento 15 en la posición 11 del vector
+x[2:5]= x[2:5]+3 #Se le suma 3 a las posiciones de la 2 a la 5
+x
+x[(length(x)-2):length(x)]=0
+x
+x[(length(x)+5)]=9 #Añade en la posición 5 a partir de la última entrada del vector el número 9 y pone NA (not available) en los valores intermedios no definidos anteriormente, no conocemos esos valores
+x
+
+```
+##Valores NA (importancia)
+Los valores NA son importantes en los vectores (en el mundo de la estadística descriptiva) porque es el símbolo que utilizamos cuando no conocemos el valor: porque hemos pasado una encuesta y no nos han respondido a esa pregunta, porque se ha corrompido el dato, etc. Una función aplicada a un vector que contiene NA tiende a dar NAs. Los NA molestan bastante en general. Casi todas las funciones de R para vectores te permiten NO TENER EN CUENTA LOS NA para poder sumar, multiplicar, hacer la media, etc.--> na.rm = TRUE (NA remove) 
+
+
+```{r}
+x
+sum(x) #Como el vector tiene 4 NA si intento sumar me devuelve NA
+prod(x)
+cumsum(x) #Hace las sumas acumuladas hasta que se topa con un NA
+mean(x)
+sum(x, na.rm = TRUE)
+mean(x, na.rm = TRUE)
+#which(x == NA) #Esto no funciona, no es la forma correcta de localizar NAs
+is.na(x) #Esta es la forma correcta de saber donde hay NA
+which(is.na(x)) #nos devuelve los índices de las entradas que poseen valores NA, las posiciones
+x[which(is.na(x))] #Para saber los valores que son NA, que lógicamente te devuelve los NA del vector, cuatro en total
+x[is.na(x)] #lo mismo que la anterior función
+y = x
+y
+y[is.na(y)]
+y[is.na(y)] = mean(y, na.rm = TRUE) #Si quito na.rm = TRUE da el mismo resultado
+y
+x[!is.na(x)] #Muestra todas las entradas del vector que no son NA, sirve para FILTRAR 
+sum(x[!is.na(x)])
+mean(x[!is.na(x)])
+#cumsum(x, na.rm =TRUE) #Nos da error
+cumsum(x[!is.na(x)]) #De esta forma sí que podríamos hacer las sumas acumuladas sin los valores NA
+na.omit(x) #Solución drástica que omite los NA y que no recomienda en estadística descriptiva, no sobreescribe x
+x
+sum(na.omit(x)) #Otra forma de sumar sin tener en cuenta los NA
+cumsum(na.omit(x))
+x_clean = na.omit(x) #Para definir el vector x sin los NA
+x_clean
+attr(x_clean, "class") = NULL
+x_clean
+?attr
+
+
+```
+
+La función $na.omit$ tiene dos atributos nombrados como attr, el primero indica las entradas sobre las que va a actura la función y el segundo indica el tipo de acción que va a realizar, en este caso omitir dichos valores NA. 
+
+
+
+
+

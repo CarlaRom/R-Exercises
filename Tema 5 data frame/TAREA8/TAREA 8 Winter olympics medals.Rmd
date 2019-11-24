@@ -1,0 +1,174 @@
+---
+title: "TAREA 8"
+author: "Carla Romero Sansano"
+date: "7 de octubre de 2019"
+output: html_document
+---
+# TAREA 8
+Carga en R o en Python el CSV de la web http://winterolympicsmedals.com/medals.csv y responde a las preguntas de la tarea.
+
+Preguntas de esta tarea
+
+ -**1.¿Cuantos deportistas aparecen en el data frame?**
+
+```{r}
+dfmedals= read.csv(file = "http://winterolympicsmedals.com/medals.csv", header = TRUE, sep = ",")
+str(dfmedals)
+head(dfmedals)
+dfmedals
+Man = subset(dfmedals, Event.gender == "M") 
+Man
+str(Man)
+nrow(Man)
+Woman = subset(dfmedals, Event.gender == "W")
+Woman
+str(Woman)
+nrow(Woman)
+Pairs = subset(dfmedals, Event.gender == "X")
+Pairs
+str(Pairs)
+nrow(Pairs)
+Pairs2 = 2*nrow(Pairs)
+Pairs2
+dfmedals[dfmedals$Event.gender == "M", ] -> M
+str(M)
+nrow(M)
+Total = sum(nrow(Man), nrow(Woman), Pairs2)
+Total
+#En total teniendo en cuenta los hombres, las mujeres y las parejas hay 2434 deportistas
+#Observaciones totales del data frame (nºfilas): 2311 
+```
+ 
+ -**2.¿Cuantos han ganado medallas de oro, cuantos de plata y cuantos de bronce?**
+ 
+```{r}
+G = subset(dfmedals, Medal == "Gold")
+nrow(G) #Medallas de oro totales: 774
+gpairs = nrow(G[G$Event.gender == "X", ]) #Medallas de oro por parejas
+Gwinners = (nrow(G)-gpairs)+gpairs*2
+Gwinners #817 deportistas que han ganado medallas de oro
+
+S = subset(dfmedals, Medal == "Silver")
+nrow(S) #Medallas de plata totales: 773
+spairs = nrow(S[S$Event.gender == "X", ])
+Swinners = (nrow(S)-spairs)+spairs*2
+Swinners #812 deportistas que han ganado medallas de plata
+
+B = subset(dfmedals, Medal == "Bronze")
+nrow(B) #Medallas de bronce totales: 764
+bpairs = nrow(B[B$Event.gender == "X", ])
+Bwinners = (nrow(B)-bpairs)+bpairs*2
+Bwinners #805 deportistas que han ganado medallas de bronce
+
+
+```
+ 
+ 
+ -**3.¿En cuantos lugares se han hecho olimpiadas de invierno?**
+ 
+```{r}
+str(dfmedals)
+#La variable City es un factor que se compone de 17 niveles distintos, por lo tanto, las olimpiadas de invierno se han hecho en 17 ciudades
+str(dfmedals$City)
+
+
+#OTRA FORMA DE HACERLO:
+nlevels(dfmedals$City)
+```
+ 
+ 
+ -**4.¿Cuantos hombres y cuantas mujeres hay?**
+ 
+```{r}
+sapply(dfmedals, function(x) cbind(sort(table(x), decreasing = TRUE)))
+#$Event.gender
+#  [,1]
+#M 1386
+#W  802
+#X  123
+dfmedals[dfmedals$Event.gender == "X", ]
+Man = subset(dfmedals, Event.gender == "M") 
+Man
+str(Man)
+nrow(Man)
+Woman = subset(dfmedals, Event.gender == "W")
+Woman
+str(Woman)
+nrow(Woman)
+Pairs = subset(dfmedals, Event.gender == "X")
+Pairs
+str(Pairs)
+nrow(Pairs)
+#Teniendo en cuenta que las parejas "X" están compuestas por un hombre y por una mujer:
+TotalMan = sum(nrow(Man), nrow(Pairs))
+TotalMan
+TotalWoman = sum(nrow(Woman), nrow(Pairs))
+TotalWoman
+#Teniendo en cuenta que dentro del subset Pairs, en la variable "Event" el término "doubles" hace referencia a parejas del mismo sexo, pero no sabemos si son hombres o mujeres, y el resto "pairs", etc., son parejas de distinto sexo. Lo que hacemos es restar a los del mismo sexo y los de distinto sexo los repartimos de forma equitativa entre hombres y mujeres:
+
+Doubles = subset(dfmedals, Event == "doubles" & Event.gender == "X")
+nrow(Doubles)
+DifGender = nrow(Pairs)-nrow(Doubles)  
+DifGender
+#Nº total de hombres sin tener en cuenta los "doubles"
+TotalM = sum(nrow(Man), DifGender)
+TotalM #1473 hombres
+#Nº total de mujeres sin tener en cuenta los "doubles"
+TotalW = sum(nrow(Woman), DifGender)
+TotalW #889 mujeres
+
+```
+ 
+ 
+-**5.¿En qué año participaron más deportistas?**
+
+```{r}
+
+table(dfmedals$Year)
+barplot(table(dfmedals$Year))
+plot(x = dfmedals$Year, y = dfmedals$Event.gender)
+
+#OTRA FORMA DE HACERLO:
+#año_factor = as.factor(dfmedals$Year) #Lo dejo escrito para que no me tranforme en factor la variable Year como ya me pasó que se me borraron los datos.
+#max(sort(summary(año_factor)))
+#2006 con 252 atletas
+
+#OTRA FORMA DE HACERLO:
+nofyears = cbind(dfmedals, N_one = rep(1, nrow(dfmedals)))
+nofyears
+
+most_people = aggregate(N_one ~ Year, data = nofyears, FUN = sum, na.rn=T)
+
+most_people = most_people[which.max(most_people$N_one),]
+
+most_people$Year
+
+```
+
+
+ -**6.El campo NOC indica el país del ganador de la medalla. ¿Qué país puede presumir de haber ganado más medallas de oro en los juegos de invierno entre 1960 y 1996?**
+ 
+```{r}
+medalsByYear <- aggregate(dfmedals$Year, list(Year = dfmedals$Year), length)
+G = subset(dfmedals, Medal == "Gold")
+G
+G2 = subset(G, Year>1956 & Year<1998)
+G2
+sort(table(G2$NOC), decreasing = TRUE)
+#Respuesta: URS
+
+
+#OTRA FORMA DE HACERLO:
+sub_años = subset(dfmedals, Year >= 1960 & Year <=1996)
+
+str(sub_años)
+
+summary(sub_años$NOC)
+
+max(sort(summary(sub_años$NOC)))
+
+
+#URS con 178 medallas
+
+```
+

@@ -1,0 +1,86 @@
+---
+title: 'Tarea 10: Estudio de bebés recién nacidos'
+author: "Carla Romero Sansano"
+date: "22 de noviembre de 2019"
+output: html_document
+---
+Instala y carga el paquete **MASS**.
+
+En el hay una tabla de datos llamada **birthwt** sobre factores que pueden incidir en el peso de los niños al nacer. 
+
+### Preguntas de esta tarea
+
+**1. Utiliza str() y head() para explorar la estructura, y con help(), mirar el significado de cada variable.**
+```{r}
+#Instalamos y cargamos el paquete MASS
+#install.packages("MASS")
+library(MASS)
+str(birthwt)
+head(birthwt)
+#help("birthwt")
+birthwt
+```
+Variables del data frame birthwt:
+
+-low: indicador de peso al nacer inferior a 2.5 kg
+-age: edad de la madre en años
+-lwt: peso de la madre en libras en el último período menstrual (1 libra= 0,453592 kg)
+-race: raza de la madre (1= blanca, 2= negra, 3= otra)
+-smoke: tabaquismo durante el embarazo
+-ptl: cantidad de trabajos prematuros previos (antes de los 18? durante el embarazo?)
+-ht:historia de hipertensión
+-ui: presencia de irritabilidad uterina
+-ftv: cantidad de visitas al médico durante el primer trimestre
+-bwt: peso al nacer en gramos
+
+**2. Calcula una tabla de frecuencias relativas marginales de los pares (raza de la madre, peso inferior a 2.5 kg o no) que permita ver si la raza de la madre influye en el peso del bebé.**
+```{r}
+#Lo primero que tengo que hacer es transformar las variables race y low en factores, con los respectivos niveles que van a ser datos cualitativos (raza: blanca, negra, otra; peso inferior a 2.5kg: Si/No)
+#Para ello hago una copia de birthwt antes en una variable A
+A <- birthwt
+#Transformo a factores las variables low y race
+A$low <- as.factor(A$low)
+A$race<- as.factor(A$race)
+#Las copio en variables en castellano
+IndicaPeso <- A[1]
+IndicaPeso
+Raza <- A[4]
+Raza
+#Transformo en un data frame solo con las dos variables low y race
+Datos = data.frame(low = IndicaPeso, race = Raza)
+rownames(Datos) = 1:nrow(Datos)
+colnames(Datos) <- c("Indicador", "Raza")
+levels(Indicador) <- c("Superior2.5", "Inferior2.5")
+#dimnames(Datos) = list( , Indicador = c("Superior2.5", "Inferior2.5"), Raza = c("Blanca", "Negra", "Otra"))
+Datos
+#Cambio el nombre de los niveles de las variables Indicador y Raza
+
+#dimnames(A)
+#dimnames(A) = list(low = c("Superior2.5", "Inferior2.5"), race = c("Blanca", "Negra", "Otra"))
+str(A)
+
+```
+
+
+
+
+**3. Dibuja un diagrama de mosaico de la tabla del ejercicio anterior.**
+
+**4. Dibuja un diagrama bidimensional de barras, con las barras organizadas en bloques, que permita visualizar la información de los ejercicios anteriores. Aprovecha para nombres adecuados a los bloques, colores a las barras, y añadir una leyenda que explique qué representa cada barra.**
+
+**5. ¿Se puede obtener alguna conclusión de la tabla y el diagrama de barras anterior? Argumenta tu respuesta**
+
+**6. Repite los cuatro ejercicios anteriores para los pares (madre fumadora o no, peso inferior a 2.5 kg o no) y para los pares (madre hipertensa o no, peso inferior a 2.5 kg o no).**
+
+**7. Calcula una tabla de frecuencias relativas marginales de las ternas (raza de la madre, madre fumadora o no, peso inferior a 2.5 kg o no) que permita ver si la raza de la madre y su condición de fumadora o no fumadora influyen en el peso del bebé.**
+
+**8. Dibuja un diagrama de mosaico de la tabla del ejercicio anterior.**
+
+
+
+
+
+
+
+
+

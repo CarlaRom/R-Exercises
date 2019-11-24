@@ -1,0 +1,34 @@
+---
+title: "T3 Ejercicios con listas"
+author: "Carla Romero Sansano"
+date: "20 de agosto de 2019"
+output: html_document
+---
+## Ejercicios con listas (Teoría T3)
+Las listas sirven para agrupar diferentes objetos, no necesariamente del mismo tipo, cada cual con un nombre interno.
+
+```{r}
+x = c(1, 5, -2, 6, -7, 8, -3, 4, -9) #Creamos primero un vector
+x
+L = list(nombre = "Temperaturas", datos = x, media = mean(x), sumas = cumsum(x))
+L
+L$media #Para acceder a la componente de la lista que queramos, por ejemplo la media
+L[[3]] #Para acceder a la tercera componente, que en este caso es la media
+L[2] #Nos devuelve los datos como lista, no como vector, por lo tanto no podemos operar matemáticamente
+L[[2]]*3 #Sin embargo, con dos corchetes nos devuelve el vector de datos con el que podemos operar
+
+```
+Hay principalmente dos funciones para una lista:
+```{r}
+str(L) #Para conocer la estructura interna de una lista
+names(L) #Para saber los nombres de la lista
+
+```
+Si trabajamos con modelos lineales, también R los trabaja en formato lista:
+```{r}
+summary(lm(formula = c(1,2,3,4)~c(1,2,3,6)))
+reg <- lm(c(1,2,3,4)~c(1,2,3,6))
+reg$coefficients
+?lm
+```
+

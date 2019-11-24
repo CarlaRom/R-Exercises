@@ -1,0 +1,52 @@
+---
+title: "Tema 5. Data frames"
+author: "Carla Romero Sansano"
+date: "23 de septiembre de 2019"
+output: html_document
+---
+
+# Data frame de Iris
+```{r}
+df = iris
+head(df,5) #Para mostrar las n primeras filas del data frame (por defecto se muestran las 6 primeras)
+tail(df,5) #Para mostrar las n últimas filas del data frame (por defecto se muestran las 6 últimas)
+str(df) #estructura global de un data frame
+names(df) #produce un vector con los nombres de las columnas
+rownames(df) #produce un vector con los nombres de las filas
+colnames(df) #lo mismo que names(df)
+dimnames(df) #produce una lista con los dos vectores (primero nombre de filas y segundo nombre de columnas)
+nrow(df) #para consultar el número de filas del data frame
+ncol(df) #para consultar el número de columnas del data frame
+dim(df) #devuelve un vector con el número de filas y el número de columnas todo de golpe
+df$Petal.Length[1:10] #Para seleccionar las 10 primeras longitudes de pétalos del data frame (df$ para seleccionar variables, dándole al tabulador se autocompleta)
+df$Species[1:10] #Species es un factor, no solo aparecen los valores sino los niveles dicho factor que en este caso es 3
+
+
+```
+
+```{r}
+str(Orange) #factor w/ 5 levels: significa que es un factor con 5 niveles. w/ leerlo como "con"
+head(Orange,4)
+tail(Orange,4)
+dataOrange = Orange
+dataOrange[c(10:12), ]
+dataOrange[c(2,17), c(1,3)]
+dataOrange[2,3]
+dataOrange[dataOrange$circumference<=50, ]
+
+```
+# Obteniendo información del data frame
+## Acceso al data frame (df)
+
+```{r}
+df[1:10, ] #Del df elijo las 10 primeras filas y TODAS las columnas (en total hay 5, las 5 variables)
+df[1:10, 2:4]
+df[df$Species == "setosa" & df$Sepal.Width > 4, ] #Filtrar solo las que cumplan la condicion de que son setosas y la anchura del sépalo es mayor que 4 y mostrar todas las columnas [, ]
+df[df$Species == "setosa" & df$Sepal.Width > 4, ][c(1,3), c(2,5)] #Filtro sobre filtro, queremos que dada la condición booleana nos muestra las filas 1 y 3, y las columnas 2 y 5 (de sepal width y species)
+
+```
+
+
+
+
+

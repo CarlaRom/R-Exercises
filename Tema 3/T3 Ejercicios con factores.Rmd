@@ -1,0 +1,41 @@
+---
+title: "T3 Ejercicios con factores"
+author: "Carla Romero Sansano"
+date: "20 de agosto de 2019"
+output: html_document
+---
+##FACTORES
+Un $\boldsymbol{factor}$ es como si se tratase de un $\mathbf{vector}$ pero con una estructura interna que permite clasificar o etiquetar las observaciones o entradas. Los atributos de un factor son los $\mathbf{niveles}$, que clasifican cada una de las entradas del factor. Estos niveles suelen ser palabras, ordenadas en orden alfabético. VER TEORÍA EN EL HTML DEL TEMA 3.
+
+Ejercicios ejemplo:
+```{r}
+nombres = c("Juan", "Antonio", "Ricardo", "Juan", "Juan", "María", "María")
+nombres
+nombres.factor = factor(nombres)
+nombres.factor
+gender = c("M", "H", "H", "M", "M", "M", "M", "H", "H")
+gender.fact = factor(gender)
+gender.fact
+gender.fact2 = as.factor(gender) #No hay diferencias respecto a la función factor()
+gender.fact2
+gender.fact3 = factor(gender, levels = c("M", "H", "B"))#Para especificar los levels que queremos sí que utilizaríamos la función factor() y no la de as.factor(). Hemos especificado un tercer nivel de bisexo o hermafrodita, aparte del de hombre y mujer.
+gender.fact3
+gender.fact4 = factor(gender, levels = c("M", "H", "B"), labels = c("Mujer", "Hombre", "Hermafrodita")) #Para especificar los niveles se puede añadir el parámetro etiquetas (labels) y así saber qué significan cada uno de los niveles definidos. También te sustituye las entradas del vector por sus correspondientes etiquetas. 
+gender.fact4
+levels(gender.fact) #Solo funciona en factores, para ver sus niveles
+levels(gender.fact4)
+levels(gender.fact4) = c("Femenino", "Masculino", "Híbrido") #Para cambiar los niveles de un factor, utilizamos la consulta de los niveles (levels()) y les asignamos otros por ejemplo más técnicos, de género.
+gender.fact4
+notas = c(1, 3, 2, 4, 1, 1, 3, 2, 2, 4, 4, 2, 1)
+notas
+notas.factor = factor(notas)
+notas.factor
+levels(notas.factor)
+levels(notas.factor) = c("Suspendido", "Suficiente", "Notable", "Excelente")
+notas.factor
+levels(notas.factor) = c("Suspendido", "Aprobado", "Aprobado", "Aprobado")
+notas.factor
+ordered(notas, labels = c("Sus", "Suf", "Not", "Exc"))
+
+```
+

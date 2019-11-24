@@ -1,0 +1,154 @@
+---
+title: "Tema 6 Apuntes3"
+author: "Carla Romero Sansano"
+date: "11 de noviembre de 2019"
+output: html_document
+---
+# DIAGRAMA DE BARRAS
+
+El tipo de gráfico más usado para representar variables cualitativas son los *diagramas de barras* (**bar plots**). Como su nombre indica, un diagrama de barras contiene, para cada nivel de la variable cualitativa, una barra de altura proporcional a su frecuencia. 
+
+La manera más sencilla de dibujar un diagrama de barras de las frecuencias absolutas o relativas de una variable cualitativa es usando la instrucción **barplot()** aplicada a la tabla correspondiente.
+
+¡Atención! Como pasaba con **prop.table()**, el argumento de **barplot** ha de ser una tabla, y, por consiguiente, se ha de apicar al resultado de **table()** o de **prop.table()**, nunca al vector de datos original. 
+
+```{r}
+sex
+barplot(table(sex), col = c("lightblue","pink"), main = "Diagrama de barras de
+        las frecuencias absolutas\n de la variable \"Sexo\"")
+
+```
+```{r}
+Respuestas
+barplot(prop.table(table(Respuestas)), main = "Diagrama de barras de frecuencias
+        relativas\n de la variable \"Respuestas\"")
+
+```
+
+### Diagrama de barras - Parámetros
+Habréis observado que en las funciones **barplot()** anteriores hemos usado el parámetro **main** para poner título a los diagramas; en general, la función **barplot()** admite los parámetros de **plot** que tienen sentido en el contexto de los diagramas de barras: **xlab**, **ylab**, **main**, etc. Los parámetros disponibles se pueden consultar en **help(barplot)**. Aquí sólo vamos a comentar algunos. 
+
+```{r}
+par(mfrow=c(1,2)) #Cuando queremos mostrar un gráfico al lado de otro, acordarse de poner mfrow, estamos indicando que queremos los gráficos en una fila y dos columnas
+barplot(table(Respuestas), col = c("green"))
+barplot(table(Respuestas), col = c("red", "blue"))
+#Si ponemos menos colores que barras, las barras que no tengan color propio reutilizarán los colores
+```
+```{r}
+#Representación horizontal
+barplot(table(Respuestas), horiz = TRUE)
+
+```
+
+El barplot() se puede aplicar a tablas bidimensionales. Las barras globales quedan definidas por la columna de la tabla, es decir, la segunda variable especificada dentro de table() y cada barra se divide en partes que representa la otra variable:
+```{r}
+#DIAGRAMA DE BARRAS APILADAS
+barplot(table(Sexo, Respuestas), legend.text = TRUE)
+```
+
+En vez de organizar las barras de la primera variable en una barra vertical y que queden apilados los niveles, se pueden organizar por bloques (uno al lado de otro); que en mi opinión queda de tal forma que es más fácil leer el gráfico.
+
+```{r}
+#DIAGRAMA DE BARRAS POR BLOQUES (UNO AL LADO DEL OTRO)
+barplot(table(Sexo,Respuestas), beside = TRUE, legend.text = TRUE)
+
+```
+
+Hacer varias representaciones gráficas para saber cual aporta más información. Dependiendo de lo que queramos saber se va a observar mejor un tipo de gráfico que otro. 
+
+Ejemplo: mismo gráfico que el anterior pero con las variables cambiadas (ahora la variable global que define las columnas es "Sexo"), con los colores específicos, y los textos modificados (al inglés):
+```{r}
+barplot(table(Respuestas, Sexo), beside = TRUE, names=c("Men", "Women"), col = c("yellow", "lightblue"), legend.text = c("No", "Yes"))
+
+```
+
+# DIAGRAMA CIRCULAR
+Un tipo muy popular de representación gráfica de variables cualitativas son los **diagramas circulares**. En un diagrama circular (**pie chart**) se representan los niveles de una variable cualitativa como sectores circulares de un círculo, de manera que el ángulo (o equivalentemente, el área) de cada sector sea proporcional a la frecuencia del nivel al que corresponde.
+Con R, este tipo de diagramas se producen con la instrucción **pie**, de nuevo aplicada a una tabla de frecuencias y no al vector original. 
+
+
+#### Parámetros del diagrama circular
+La función **pie** admite muchos parámetros para modificar el resultado: se pueden cambiar los colores con **col**, se pueden cambiar los nombres de los niveles con **names**, se puede poner un título con **main**, etc.; podéis consultar la lista completa de parámetros en **help(pie)**.
+
+```{r}
+x = c(4,2,3,5,1,4,3,1,5,2,3,2)
+pie(table(x), main = "Diagrama circular de la variable x")
+
+```
+
+Diagrama circular: diagrama que Juan Gabriel no recomienda demasiado porque es fácil de entender pero es difícil a simple vista comprender las relaciones entre las frecuencias que representan. 
+Pese a su popularidad, es poco recomendable usar diagramas circulares porque a veces es difícil, a simple vista, comprender las relaciones entre las frecuencias que representan. 
+
+```{r}
+#Otro ejemplo
+Respuestas
+pie(table(Respuestas), main = "Diagrama circular
+    de la variable \"Respuestas\"")
+
+```
+
+# GRÁFICOS DE MOSAICO
+Otra representación de las tablas multidimensionales de frecuencias son los **gráficos de mosaico**. Estos gráficos se obtienen sustituyendo cada entrada de la tabla de frecuencias por una región rectangular de área proporcional a su valor.
+En concreto, para obtener el gráfico de mosaico de una tabla bidimensional,se parte de un cuadrado de lado 1, primero se divide en barras verticales de amplitudes iguales a las frecuencias relativas de una variable, y luego cada barra se divide, a lo alto, en regiones de alturas proporcionales a las frecuencias relativas marginales de cada nivel de la otra variable, dentro del nivel correspondiente de la primera variable. 
+Un gráfico de mosaico de una tabla se obtiene con R aplicando la función **plot** a la tabla, o también la función **mosaicplot**. Esta última también se puede aplicar a matrices. 
+Cuidado porque estos gráficos pueden resultar difíciles de leer.
+```{r}
+plot(table(Sexo,Respuestas), main = "Gráfico de mosaico de las variables
+     \"Sexo\" y \"Respuestas\"")
+
+```
+
+
+En el gráfico de mosaico de una tabla **tridimensional**, primero se divide el cuadrado en barras verticales de amplitudes iguales a las frecuencias relativas de una variable. 
+
+Luego cada barra se divide, a lo alto, en regiones de alturas proporcionales a las frecuencias relativas **marginales** de cada nivel de una segunda variable, dentro del nivel correspondiente de la primera variable.
+
+Finalmente, cada sector rectangular se vuelve a dividir a lo ancho en regiones de amplitudes proporcionales a las frecuencias relativas marginales de cada nivel de la tercera variable dentro de la combinación correspondiente de niveles de las otras dos. 
+
+
+```{r}
+plot(HairEyeColor, main = "Gráfico de mosaico de la tabla HairEyeColor", col=c("pink", "lightblue"))
+#es lo mismo que hacer: mosaicplot(HairEyeColor,...), la función mosaicplot tiene sus propios parámetros
+
+```
+
+
+# Muchos más gráficos
+Además de sus parámetros usuales, la función **plot** admite algunos parámetros específicos cuando se usa para producir el gráfico de mosaico de una tabla. Estos parámetros se pueden consultar en **help(mosaicplot)**.
+
+Los paquetes **vcd** y **vcdExtra** incluyen otras funciones que producen representaciones gráficas interesantes de tablas **tridimensionales**. 
+
+- La función **cotabplot** de **vcd** produce un diagrama de mosaico para cada nivel de la tercera variable.
+- La función **mosaic3d** de **vcdExtra** produce un diagrama de mosaico tridimensional en una ventana de una aplicación para gráficos 3D interactivos. 
+
+Son paquetes un poco antiguos, por lo que hoy en día, se tiende a utilizar **ggplot** que es mucho más moderno y se encuentra dentro de la librería Tydiverse (Curso de Juan Gabriel).
+
+
+```{r}
+#Ejemplo con el paquete vcd y vcdExtra (antes instalarlos y cargarlos (hacer lo mismo con el paquete rgl))
+vcd::cotabplot(HairEyeColor) #ponerlo en la consola
+vcdExtra::mosaic3d(HairEyeColor, type = "expected", box = TRUE, col = c("lightblue", "pink")) #no me salen los colores
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

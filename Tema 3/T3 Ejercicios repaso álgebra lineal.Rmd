@@ -1,0 +1,110 @@
+---
+title: "T3 Ejercicios repaso álgebra lineal"
+author: "Carla Romero Sansano"
+date: "21 de agosto de 2019"
+output: html_document
+---
+## ÁLGEBRA LINEAL
+Juan Gabriel tiene un curso específico de álgebra y en este tema solo va a dar un pequeño repaso. 
+```{r}
+M = matrix(1:12, nrow = 5)
+M
+t(M) #La matriz traspuesta cambia  las filas por columnas
+M%*%t(M) #Para multiplicar matrices tiene que coincidir el número de columnas de la primera por el número de filas de la segunda. En este caso M y su traspuesta pueden multiplicarse.
+#La multiplicación de matrices consiste en ir multiplicando el primer elemento por la fila de la otra matriz y sumar todas las entradas (eso supondría el primer elemento de la matriz resultante)
+M*M #Devuelve el producto del primer elemento por el primer elemento, el segundo por el segundo, etc. Es una multiplicación tensorial no una multiplicación de matrices
+
+```
+###Ejercicios del tema (fondo verde)
+Observad qué ocurre si, siendo $A = \begin{pmatrix}2 & 0 & 2\\1 & 2 & 3\\0 & 1 & 3 \end{pmatrix}$ y $B = \begin{pmatrix} 3 & 2 & 1\\ 1 & 0 & 0\\ 1 & 1 & 1 \end{pmatrix}$, realizamos las operaciones $A*B$, $A^{2}$ y $B^{3}$. 
+```{r}
+vector = c(2,0,2)
+vector
+vector2 = c(1,2,3)
+vector2
+vector3 = c(0, 1, 3)
+vector3
+Matriz = rbind(vector, vector2, vector3)
+Matriz
+A = matrix(Matriz, nrow = 3)
+A
+B = rbind(c(3,2,1), c(1,0,0), c(1,1,1))
+B
+A%*%B #Multiplicación de las matrices
+mtx.exp(A, 2) #Matriz A al cuadrado, es decir, A*A (PAQUETE Biodem)
+A%^%2 #La matriz A al cuadrado (PAQUETE expm)
+A%*%A #Otra forma de hacer la matriz A al cuadrado a mano
+mtx.exp(B,3) #La matriz B al cubo (PAQUETE Biodem)
+B%^%3 #La matriz B al cubo (PAQUETE expm)
+B%*%B%*%B #Otra forma de hacer la matriz B al cubo a mano
+
+```
+##Operaciones
+det(matriz) - permite calcular el determinante de una matriz CUADRADA(mismo número de filas y columnas)
+```{r}
+det(A) 
+det(B)
+```
+
+qr(matriz)$rank - para determinar el rango de una matriz, si solo utilizamos qr nos muestra una lista
+```{r}
+qr(M) #Nos muestra la lista con los datos de la matriz
+qr(M)$rank #Nos muestra el rango de la matriz
+```
+
+solve(matriz) - PARA CALCULAR LA INVERSA DE UNA MATRIZ que sea invertible. Las matrices que no son de rango máximo no son invertibles. La inversa al multiplicarla por la matriz original nos da la matriz identidad, con 1 en la diagonal.
+```{r}
+#MATRIZ INVERSA
+solve(M) #Nos da error porque M no es una matriz cuadrada
+solve(A)
+solve(B)
+C = rbind(c(1,4,2), c(0,1,3), c(1,8,9)) #Creamos una matriz
+C
+qr(C)$rank
+solve(C)
+solve(C)%*%C
+round(solve(C)%*%C) #Muestra la matriz identidad redondeada, clavada
+
+```
+La opción de solve(matriz,b) también permite resolver sistemas de ecuaciones lineales.Siendo b el vector de términos independientes.
+```{r}
+C
+solve(C, c(1,2,3)) #Ejemplo para resolver cuando vale la x, y, z. En la matriz sería x+4y+2z, y+3z, x+8y+9z. En este caso sería x=5, y=-1.6, z=1.2
+
+```
+##Valores y vectores propios (ver teoría enlace wikipedia)
+```{r}
+eigen(C) #Nos devuelve una lista con los tres valores propios y los tres vectores propios en columna
+eigen(C)$values #Si solo queremos obtener los tres valores propios
+eigen(C)$vectors #Si solo queremos obtener los tres vectores propios
+
+```
+
+###Ejercicios del tema (fondo verde)
+Comprobad, con los datos del ejemplo anterior, que si $P$ es la matriz de vectores propios de $M$ en columna y $D$ la matriz diagonal cuyas entradas son los valores propios de $M$, entoces se cumple la siguiente igualdad llamada **descomposición canónica**: $$M = P\cdot D\cdot P^{-1}$$
+
+```{r}
+M = rbind(c(2,6,-8), c(0,6,-3), c(0,2,1))
+eigen(M)
+P = eigen(M)$vector
+P
+D = diag(eigen(M)$values)
+D
+P%*%D%*%solve(P) #SÍ SE CUMPLE LA IGUALDAD DEL EJERCICIO
+M
+```
+
+##Valores y vectores propios
+Lo más normal es que aparezcan matrices con números complejos.
+```{r}
+E = matrix(c(3-2i, 5+3i, 1+2i, 2-1i), nrow = 2, byrow = T) #Ejemplo de matriz con números complejos
+E
+E%*%E 
+eigen(E)
+solve(E, c(1-1i, 4)) #Para resolver el sistema lineal complejo
+det(E) #El determinante no está definido por complejos. Pero el determinante es igual al producto de los valores propios de la matriz (que sí que hemos podido obtener), por lo que podemos calcularlo de la siguiente manera
+prod(eigen(E)$values) #Determinante calculado a partir de los valores propios de la matriz
+
+
+```
+

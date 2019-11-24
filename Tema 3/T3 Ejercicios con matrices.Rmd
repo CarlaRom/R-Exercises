@@ -1,0 +1,81 @@
+---
+title: "T3 Ejercicios con matrices"
+author: "Carla Romero Sansano"
+date: "21 de agosto de 2019"
+output: html_document
+---
+##MATRICES
+Más información en el curso de álgebra lineal de Juan Gabriel Gomila. Ejemplo para declarar una matriz:
+```{r}
+M = matrix(1:12, nrow = 4) #Por defecto te ordena la matriz por columnas (byrow = F)
+M
+M = matrix(1:12, nrow = 4, byrow = T)#Para ordenar la matriz por filas
+M
+M = matrix(1:12, nrow = 3)
+M
+M = matrix(1:12, nrow = 5) #Si intentamos poner un número de filas que no es múltiplo del número total de datos (12), nos da error
+M #Aun así, genera una matriz con 5 filas, rellenándola con datos repetidos
+
+matrix(1, nrow= 4, ncol = 6) #Si ponemos un solo número como vector, tenemos que especificar el número de filas y de columnas y crea la matriz con el mismo número repetido.
+
+```
+
+###Ejercicios del tema (fondo color verde)
+¿Cómo definirías una matriz constante? Es decir, ¿cómo definirías una matriz $A$ tal que $\forall i = 1,...,n; j = 1,...,m, a_{ij}=k$ siendo $k\ \in\ \mathbb{R}$? Como R no admite incógnitas, prueba para el caso específico n=3, m=5, $k$=0.
+```{r}
+matrix(0, nrow = 3, ncol = 5)
+```
+
+
+Con el vector vec = (1,2,3,4,5,6,7,8,9,10,11,12) crea la matriz $$\begin{pmatrix} 1 & 4 & 7 & 10\\2 & 5 & 8 & 11\\3 & 6 & 9 & 12 \end{pmatrix}$$
+```{r}
+vec = c(1:12)
+vec
+a = matrix(vec, nrow = 3)
+a
+```
+
+##Cómo construir una matriz a partir de filas o columnas
+Las funciones más utilizadas son rbind o cbind.
+```{r}
+rbind(M, c(1,2,3), c(-1,-2,-3)) #Añade dos filas más a la matriz M (las filas las especificamos)
+rbind(c(1,2,3), c(-1,-2,-3)) #Crea una matriz con las filas especificadas
+cbind(c(1,2,3), c(-1,-2,-3)) #Crea una matriz con las columnas especificadas
+diag(c(1,2,3,4)) #Para crear una matriz diagonal a partir de un vector (números en la diagonal y ceros en el resto)
+diag(5, nrow = 3)
+
+```
+##Submatrices
+```{r}
+M
+M[2,3] #Muestra el elemento de la fila 2 y columna 3
+M[2, ] #Muestra la fila 2
+M[,3] #Muestra la tercera columna
+M[c(2,3,5), 1:2] #Muestra de las filas 2, 3 y 5, las columnas 1 y 2
+
+```
+
+##Funciones que se pueden aplicar a las matrices
+```{r}
+diag(M) #A pesar de que la matriz no es cuadrada te muestra la diagonal en la que el elemento de la fila 1 coincide con el de la columna 1, la fila 2 con el de la columna 2, etc.
+nrow(M) #Número de filas
+ncol(M) #Número de columnas
+dim(M) #Devuelve el número de filas y el número de columnas
+sum(M) #Suma de todas las entradas de la matriz
+prod(M) #Producto de todas las entradas de la matriz
+mean(M) #Media de todas las entradas de la matriz
+colSums(M) #Suma de las entradas de cada columna (en este caso hay 3 columnas)
+rowSums(M) #Suma de las entradas de cada fila (en este caso hay 5 filas)
+colMeans(M) #Media por columnas
+rowMeans(M) #Media por filas
+#MARGIN = 1 es un parámetro que se utiliza para aplicar una función por filas en una matriz
+#MARGIN = 2 es un parámetro que se utiliza para aplicar una función por columnas
+#MARGIN = c(1,2) es un parámetro para aplicar una función tanto en filas como en columnas
+apply(M, MARGIN = 1, FUN = function(x){sqrt(sum(x^2))}) #Ejemplo de aplicación de errores cuadrados medios por filas en una matriz M (raíz cuadrada de la suma de las entradas al cuadrado)
+apply(M, MARGIN = 2, FUN = function(x){sqrt(sum(x^2))}) #Mismo ejemplo pero aplicado por columnas
+apply(M, MARGIN = c(1,2), FUN = function(x){x^2}) #Aplicación del cuadrado de cada una de las entradas de la matriz
+
+```
+
+
+

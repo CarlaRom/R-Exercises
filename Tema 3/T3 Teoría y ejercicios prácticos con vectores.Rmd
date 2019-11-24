@@ -1,0 +1,121 @@
+---
+title: "Vectores T3"
+author: "Carla Romero Sansano"
+date: "12 de agosto de 2019"
+output: html_document
+---
+
+```{r vector, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Subvectores
+
+- ```vector[i]```: da la $i$-ésima entrada del vector
+
+	- Los índices en R empiezan en 1
+	- ```vector[length(vector)]```: nos da la última entrada del vector
+	- ```vector[a:b]```: si $a$ y $b$ son dos números naturales, nos da el subvector con las entradas del vector original que van de la posición $a$-ésima hasta la $b$-ésima.
+	- ```vector[-i]```: si $i$ es un número, este subvector está formado por todas las entradas del vector original menos la entrada $i$-ésima. Si $i$ resulta ser un vector, entonces es un vector de índices y crea un nuevo vector con las entradas del vector original,cuyos índices pertenecen a $i$
+	- ```vector[-x]```: si $x$ es un vector (de índices), entonces este es el complementario de vector[$x$]
+	
+
+## Subvectores
+
+- También podemos utilizar operadores lógicos:
+	
+	- ```==```: =
+	- ```!=```: $\neq$
+	- ```>=```: $\ge$  
+	- ```<=```: $\le$
+	- ```<```: $<$
+	- ```>```: $>$
+	- ```!```: NO lógico
+	- ```&```: Y lógico
+	- ```|```: O lógico
+	
+	
+## Subvectores
+
+```{r}
+v = c(14,5,6,19,32,0,8)
+v[2]
+v[-c(3,5)]
+v[v != 19 & v>15]
+```
+	
+	
+## Condicionales
+
+- ```which(x cumple condición)```: para obtener los índices de las entradas del vector $x$ que satisfacen la condición dada
+- ```which.min(x)```: nos da la primera posición en la que el vector $x$ toma su valor mínimo
+- ```which(x==min(x))```: da todas las posiciones en las que el vector $x$ toma sus valores mínimos
+- ```which.max(x)```: nos da la primera posición en la que el vector $x$ toma su valor máximo
+- ```which(x==max(x))```: da todas las posiciones en las que el vector $x$ toma sus valores máximos
+
+## Ejercicios prácticos (por consola)
+```{r ejercicios vectores}
+x = seq(3, 50, by = 3.5)
+x
+x[3]
+x[8]
+x[length(x)] #última posición
+x[length(x)-1] #penúltima posición
+x[length(x)-2] #Antepenúltima posición
+x[-3] #Desaparece el elemento de la tercera posición del vector
+x[4:8] #Nos quedamos con los elementos del 4 al 8
+x[8:4] #Nos da los elementos ordenados del 8 al 4, hacía atrás
+x[seq(2, length(x), by = 2)] #Cómo obtener los elementos en posición par (comienza por el 2)
+x[seq(1, length(x), by = 2)] #Cómo obtener los elementos en posición impar (comienza por el 1)
+x[-seq(2, length(x), by = 2)] #Quitar los elementos en posición par u otra forma de obtener elementos en posición impar
+x[-seq(1, length(x), by = 2)] #Quitar los elementos en posición impar u otra forma de obtener pares
+x[(length(x)-3):length(x)] #Cómo obtener los 4 últimos elementos del vector
+x[c(1,5,6)] #Filtrar posiciones (por ej 1, 5 y 6)
+x[x>30] #Seleccionar los elementos más grandes que 30
+x[x>20 & x<40] #Seleccionar elementos superiores a 20 e inferiores a 40
+x[x!=3 & x!=17] #Elementos distintos de 3 y de 17
+x[x<10 | x>40] #Elementos más pequeños que 10 o elementos más grandes que 40
+x[x>=10]
+x[!x<10] #Negar que x sea menor de 10, te muestra 10 y superiores, es lo mismo que x>=10
+x[x%%2==0] #Cómo obtener números PARES
+x[x%%2==1] #Cómo obtener números IMPARES
+x>30 #Para cada posición en el vector te indica si se cumple la condición (>30)
+ #Se pueden seleccionar las entradas de un vector en base a otro vector, mientras que ambos tengan el mismo número de entradas
+x = c(2, -4, 8, 3, 9, 0, 5, 4, 2)
+y = c(-2, 3, -9, 1, -5, 8, 7, -2, 2)
+#obtenemos de x los elementos cuyo análogo en y es positivo, es decir, si el primer elemento de y es positivo se coge el primer elemento de x, si el segundo es negativo no se coge el segundo de x, si el tercer elemento de y es positivo se coge el tercer elemento de x, etc. Filtramos un vector en base a los valores de otro vector.
+x[y>0] #aunque el -4 no es positivo, como el elemento en y sí que lo es te pinta el -4 de x.
+
+
+```
+
+#### Ejercicios con funciones condicionales
+RECORDAR: Nos devuelven la posición en el vector (los índices) de los elementos que cumplan una determinada condición, pero no nos devuelven los elementos concretos, es decir solo nos indican la posición. 
+
+```{r ejercicios vectores condicionales}
+which(x>4) #Nos indica la posición de los elementos que son superiores a 4
+x[which(x>4)] #Nos indica los elementos que son mayores que 4
+x[x>4] #hace lo mismo que la anterior
+which(x>2 & x<8)
+which(x<5 | x%%2==0)
+x[which(x<5 | x%%2==0)]
+which(x%%2==0)
+which.min(x)
+which(x==min(x)) #Para más de un mínimo
+which.max(x)
+which(x == max(x)) #Para más de un máximo
+x[x<2 & x>0] #No encuentra el elemento en el vector que cumpla lo escrito
+which(x<2 & x>0) #No encuentra el índice/posición (número entero) en la que se cumpla la condición
+#Vectores vacíos o nulos:
+x = c()
+x
+y = NULL
+y
+z = c(x, 2, y, 7)
+ #no aparecen nunca los elementos nulos dentro de la declaración
+z
+
+```
+
+
+
